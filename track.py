@@ -36,7 +36,7 @@ from yolov5.utils.plots import Annotator, colors, save_one_box
 from strong_sort.utils.parser import get_config
 from strong_sort.strong_sort import StrongSORT
 
-from script.plot import draw_gate_point, draw_point, get_trans_mtx, get_trans_point, wrap_perspective
+from script.plot import counting_pad, draw_gate_point, draw_point, get_trans_mtx, get_trans_point, wrap_perspective
 from script.count import Counting
 
 # remove duplicated stream handler to avoid duplicated logging
@@ -249,9 +249,10 @@ def run(
                             annotator.box_label(bboxes, label, color=colors(c, True))
 
                             # draw wrap transformation
-                            im_wrap = wrap_perspective(im_wrap0, matrix) if save_wrap else bev_frame
-                            draw_point(im_wrap, cxcy, str(id))
-                            draw_gate_point(im_wrap, line=counting_line, n_gate=6)
+                            if save_wrap:
+                                bev_frame = wrap_perspective(im_wrap0, matrix)
+                            draw_point(bev_frame, cxcy, str(id))
+                            draw_gate_point(bev_frame, line=counting_line, n_gate=6)
 
                             # count vehicle
                             counting.count(cxcy, id, c)
@@ -268,7 +269,8 @@ def run(
 
             # Stream results
             im0 = annotator.result()
-            im0 = np.vstack((im0, im_wrap)) if im_wrap is not None else im0
+            im0 = np.vstack((im0, bev_frame))
+            im0 = counting_pad(im0, counting.result())
             if show_vid:
                 cv2.imshow(str(p), im0)
                 cv2.waitKey(1)  # 1 millisecond
@@ -304,8 +306,6 @@ def run(
     if update:
         strip_optimizer(yolo_weights)  # update model (to fix SourceChangeWarning)
 
-    return counting.result()
-    
     
 def parse_opt():
     parser = argparse.ArgumentParser()

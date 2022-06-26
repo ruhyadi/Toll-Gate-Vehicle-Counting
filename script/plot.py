@@ -50,6 +50,15 @@ def draw_gate_point(frame, line=30, n_gate=6):
 
     return frame
 
+def counting_pad(frame, results, height=30):
+    """Pad frame with counting pad"""
+    H, W = frame.shape[0], frame.shape[1]
+    pad = np.zeros((height, W, 3), dtype=np.uint8)
+    pad = cv2.putText(pad, f'Total: {results[0]}, Class: {results[1]}', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+    frame = np.concatenate((pad, frame), axis=0)
+
+    return frame
+
 if __name__ == "__main__":
 
     # Read image
