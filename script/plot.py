@@ -41,12 +41,12 @@ def draw_point(frame, cxcy, id):
 
     return frame
 
-def draw_gate_point(frame, n_gate=6):
+def draw_gate_point(frame, line=30, n_gate=6):
     """Draw gate point based on frame"""
     H, W = frame.shape[0], frame.shape[1]
     gate_points = np.round(np.linspace(0, W, (n_gate+1)))
     for i in gate_points:
-        cv2.circle(frame, (int(i), 30), 5, (0, 0, 255), -1)
+        cv2.circle(frame, (int(i), line), 5, (0, 0, 255), -1)
 
     return frame
 

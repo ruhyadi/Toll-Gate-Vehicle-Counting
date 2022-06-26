@@ -37,6 +37,7 @@ from strong_sort.utils.parser import get_config
 from strong_sort.strong_sort import StrongSORT
 
 from script.plot import draw_gate_point, draw_point, get_trans_mtx, get_trans_point, wrap_perspective
+from script.count import Counting
 
 # remove duplicated stream handler to avoid duplicated logging
 logging.getLogger().removeHandler(logging.getLogger().handlers[0])
@@ -74,6 +75,7 @@ def run(
         hide_class=False,  # hide IDs
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
+        counting_line=30,  # counting line
 ):
 
     source = str(source)
@@ -134,6 +136,9 @@ def run(
             )
         )
     outputs = [None] * nr_sources
+
+    # Initialize Counting
+    counting = Counting(line=counting_line)
 
     # Run tracking
     model.warmup(imgsz=(1 if pt else nr_sources, 3, *imgsz))  # warmup
@@ -246,7 +251,10 @@ def run(
                             # draw wrap transformation
                             im_wrap = wrap_perspective(im_wrap0, matrix) if save_wrap else bev_frame
                             draw_point(im_wrap, cxcy, str(id))
-                            draw_gate_point(im_wrap, n_gate=6)
+                            draw_gate_point(im_wrap, line=counting_line, n_gate=6)
+
+                            # count vehicle
+                            counting.count(cxcy, id, c)
 
                             if save_crop:
                                 txt_file_name = txt_file_name if (isinstance(path, list) and len(path) > 1) else ''
@@ -296,7 +304,9 @@ def run(
     if update:
         strip_optimizer(yolo_weights)  # update model (to fix SourceChangeWarning)
 
-
+    return counting.result()
+    
+    
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolo-weights', nargs='+', type=str, default=WEIGHTS / 'yolov5s.pt', help='model.pt path(s)')
@@ -331,6 +341,7 @@ def parse_opt():
     parser.add_argument('--hide-class', default=False, action='store_true', help='hide IDs')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
+    parser.add_argument('--counting-line', type=int, default=30, help='counting line')
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(vars(opt))
