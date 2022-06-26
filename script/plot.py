@@ -17,8 +17,10 @@ def get_trans_mtx(frame, src=None, dst=None):
 
 def wrap_perspective(frame, matrix, W=None, H=None):
     """Wrap frame with perspective"""
-    if W is None and H is None:
-        H, W = frame.shape[0], frame.shape[1]
+    if W is None:
+        W = frame.shape[1]
+    if H is None:
+        H = frame.shape[0]
     out = cv2.warpPerspective(frame, matrix, (W, H), flags=cv2.INTER_LINEAR)
 
     return out
@@ -36,6 +38,15 @@ def draw_point(frame, cxcy, id):
     """Draw point to frame"""
     frame = cv2.circle(frame, cxcy, radius=7, color=(0, 255, 0), thickness=-1)
     frame = cv2.putText(frame, str(id), (cxcy[0] + 5, cxcy[1] - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+    return frame
+
+def draw_gate_point(frame, n_gate=6):
+    """Draw gate point based on frame"""
+    H, W = frame.shape[0], frame.shape[1]
+    gate_points = np.round(np.linspace(0, W, (n_gate+1)))
+    for i in gate_points:
+        cv2.circle(frame, (int(i), 30), 5, (0, 0, 255), -1)
 
     return frame
 
