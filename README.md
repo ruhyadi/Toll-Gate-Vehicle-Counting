@@ -8,9 +8,6 @@
 
 </div>
 
-## ⚠️&nbsp;&nbsp;Cautions
-> This repository currently under development
-
 ## 📼&nbsp;&nbsp;Demo
 <div align="center">
 
@@ -20,12 +17,17 @@
 
 ## 📌&nbsp;&nbsp;Introduction
 
-Lorem ipsum
+Toll Gate Vehicle Counting is a system that aims to count the number of vehicles entering toll gates using computer vision technology. The author has blogged about this project which can be seen on [ruhyadi.github.io](https://ruhyadi.github.io/project/computer-vision/toll-gate-vehicle-counting) and [ruhyadi.medium.io](https://ruhyadi.medium.com/toll-gate-vehicle-counting-5e0a396c7a9f).
 
-## 🚀&nbsp;&nbsp;Quickstart
-> Lorem ipsum
+The flow diagram of this system can be seen in the image below.
 
-### 🍿&nbsp;&nbsp;Inference
+<div align="center">
+
+![demo](./docs/toll-flowchart-details.png)
+
+</div>
+
+## 🍿&nbsp;&nbsp;Inference
 ```bash
 python track.py \
     --source ./data/toll_gate.mp4 \
@@ -35,7 +37,9 @@ python track.py \
     --save-vid
 ```
 
-## ❤️&nbsp;&nbsp;Acknowledgement
+## ❤️ Acknowledgement
+
+The project is part of **Nodeflux Intership x Kampus Merdeka**
 
 - [YOLOv5 by Ultralytics](https://github.com/ultralytics/yolov5)
 - [mikel-brostrom/Yolov5_StrongSORT_OSNet](https://github.com/mikel-brostrom/Yolov5_StrongSORT_OSNet)
