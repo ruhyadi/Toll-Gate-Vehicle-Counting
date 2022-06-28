@@ -30,7 +30,7 @@ The flow diagram of this system can be seen in the image below.
 ## 🍿&nbsp;&nbsp;Inference
 ```bash
 python track.py \
-    --source ./data/toll_gate.mp4 \
+    --source ./demo/toll_gate.mp4 \
     --yolo-weights ./weights/yolov5s.pt \
     --strong-sort-weights ./weights/osnet_x0_25_msmt17.pt \
     --classes 2 5 7 \
